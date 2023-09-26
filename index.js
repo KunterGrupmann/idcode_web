@@ -1,10 +1,31 @@
-const express = require ('express')
+const express = require('express')
 const app = express()
 
-app.get ('/', (rec, res)=>  {
-	res.send('Hello World!')
+//use html view files
+const path = require("path")
+app.use(express.static(path.join(__dirname, 'views')))
+
+const parseUrl = require('body-parser');
+let encodeUrl = parseUrl.urlencoded({ extended: true });
+
+
+
+app.get('/', (req, res) => {
+	console.log('test')
+	res.sendFile(path.join(__dirname, 'views', 'validate_from.html'))
 })
 
-app.listen(3000, ()=>{
+const validId= require('./validate')
+
+app.post('/validate', encodeUrl, (req, res) => {
+	console.log('form data validation')
+	console.log(req.body)
+	console.log(req.body.idcode)
+	res.send(validId.idInfo(req.body.idcode))
+})
+
+
+
+app.listen(3000, () => {
 	console.log('example app is started at http://localhost:3000')
 })
